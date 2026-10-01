@@ -24,33 +24,71 @@ function updateClock() {
 updateClock();
 setInterval(updateClock, 60000);
 
-// Also update when the app is opened
-function openTablegram() {
-  document.getElementById('tablegramApp').classList.add('active');
-  document.querySelector('.home-screen').classList.add('hidden');
-  document.querySelector('.statusbar').classList.add('hidden');
-  document.querySelector('.page-dots').classList.add('hidden');
-  document.querySelector('.dock').classList.add('hidden');
-  document.querySelector('.home-indicator').classList.add('hidden');
+// Track current screen state
+let currentScreen = 'home';
+
+// Navigation functions with history support
+function navigateTo(screen) {
+  // Push to history if not initial load
+  if (screen !== currentScreen) {
+    history.pushState({ screen: screen }, '', `#${screen}`);
+    currentScreen = screen;
+  }
+  
+  // Update UI based on screen
+  const tablegramApp = document.getElementById('tablegramApp');
+  const arthurChat = document.getElementById('arthurChat');
+  const homeScreen = document.querySelector('.home-screen');
+  const statusbar = document.querySelector('.statusbar');
+  const pageDots = document.querySelector('.page-dots');
+  const dock = document.querySelector('.dock');
+  const homeIndicator = document.querySelector('.home-indicator');
+  
+  // Hide all
+  tablegramApp.classList.remove('active');
+  arthurChat.classList.remove('active');
+  homeScreen.classList.add('hidden');
+  statusbar.classList.add('hidden');
+  pageDots.classList.add('hidden');
+  dock.classList.add('hidden');
+  homeIndicator.classList.add('hidden');
+  closeHamburgerMenu();
+  
+  // Show based on screen
+  switch(screen) {
+    case 'home':
+      homeScreen.classList.remove('hidden');
+      statusbar.classList.remove('hidden');
+      pageDots.classList.remove('hidden');
+      dock.classList.remove('hidden');
+      homeIndicator.classList.remove('hidden');
+      break;
+    case 'contacts':
+      tablegramApp.classList.add('active');
+      break;
+    case 'chat':
+      arthurChat.classList.add('active');
+      break;
+  }
+  
   updateClock();
 }
 
+// Also update when the app is opened
+function openTablegram() {
+  navigateTo('contacts');
+  loadArthurMessages();
+}
+
 function closeTablegram() {
-  document.getElementById('tablegramApp').classList.remove('active');
-  document.querySelector('.home-screen').classList.remove('hidden');
-  document.querySelector('.statusbar').classList.remove('hidden');
-  document.querySelector('.page-dots').classList.remove('hidden');
-  document.querySelector('.dock').classList.remove('hidden');
-  document.querySelector('.home-indicator').classList.remove('hidden');
-  updateClock();
+  navigateTo('home');
 }
 
 // Arthur Chat functionality
 const ARTHUR_CHAT_KEY = 'arthur_chat_messages';
 
 function openArthurChat() {
-  document.getElementById('tablegramApp').classList.remove('active');
-  document.getElementById('arthurChat').classList.add('active');
+  navigateTo('chat');
   loadArthurMessages();
 }
 
@@ -71,9 +109,7 @@ function filterContacts() {
 }
 
 function closeArthurChat() {
-  document.getElementById('arthurChat').classList.remove('active');
-  document.getElementById('tablegramApp').classList.add('active');
-  closeHamburgerMenu();
+  navigateTo('contacts');
 }
 
 function toggleHamburgerMenu() {
@@ -176,21 +212,19 @@ function sendMessage() {
 // Allow sending message with Enter key
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') {
-    const arthurChat = document.getElementById('arthurChat');
-    const tablegramApp = document.getElementById('tablegramApp');
     const hamburgerMenu = document.getElementById('hamburgerMenu');
     
     if (hamburgerMenu && hamburgerMenu.classList.contains('active')) {
       closeHamburgerMenu();
-    } else if (arthurChat.classList.contains('active')) {
-      closeArthurChat();
-    } else if (tablegramApp.classList.contains('active')) {
-      closeTablegram();
+    } else if (currentScreen === 'chat') {
+      navigateTo('contacts');
+    } else if (currentScreen === 'contacts') {
+      navigateTo('home');
     }
   }
   
   // Send message on Enter in Arthur chat
-  if (e.key === 'Enter' && document.getElementById('arthurChat').classList.contains('active')) {
+  if (e.key === 'Enter' && currentScreen === 'chat') {
     const input = document.getElementById('messageInput');
     if (input === document.activeElement) {
       e.preventDefault();
@@ -351,7 +385,17 @@ function sendPhoto(imageDataUrl) {
   }, 5000);
 }
 
-// Add search event listener
+// Handle browser back/forward navigation
+window.addEventListener('popstate', function(e) {
+  if (e.state && e.state.screen) {
+    navigateTo(e.state.screen);
+  } else {
+    // No state, go to home
+    navigateTo('home');
+  }
+});
+
+// Initialize navigation on load
 document.addEventListener('DOMContentLoaded', function() {
   const searchInput = document.getElementById('contactSearch');
   if (searchInput) {
@@ -362,5 +406,13 @@ document.addEventListener('DOMContentLoaded', function() {
   const cameraButton = document.querySelector('.camera-button');
   if (cameraButton) {
     cameraButton.onclick = openCamera;
+  }
+  
+  // Check URL hash for initial screen
+  const hash = window.location.hash.slice(1);
+  if (hash && ['home', 'contacts', 'chat'].includes(hash)) {
+    navigateTo(hash);
+  } else {
+    navigateTo('home');
   }
 });

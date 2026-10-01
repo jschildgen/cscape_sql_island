@@ -2,18 +2,18 @@
 <html lang="de">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>OSGreSQL</title>
     <link rel="stylesheet" href="./app.css" />
   </head>
   <body>
     <div class="iphone">
       <div class="statusbar">
-        <span>9:41</span>
+        <span>00:00</span>
         <div class="icons">
           <span class="signal"><span></span><span></span><span></span><span></span></span>
           <span>B+</span>
-          <span class="battery"></span>
+          <span class="battery" onclick="location.reload(true)"></span>
         </div>
       </div>
 
@@ -27,6 +27,14 @@
             </div>
             <span class="app-label">Tablegram</span>
           </div>
+          <!--<div class="app">
+            <div class="app-icon" title="Refresh" onclick="javascript:location.reload(true)">
+              <div class="chat-glyph">
+                <div class="bubble"></div>
+              </div>
+            </div>
+            <span class="app-label">Refresh</span>
+          </div>-->
         </div>
       </div>
 
