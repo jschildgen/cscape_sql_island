@@ -486,6 +486,11 @@ body {
   color: #4b68e8;
 }
 
+.switch-camera-button {
+  font-size: 24px;
+  color: #4b68e8;
+}
+
 .send-button {
   background: #007AFF;
   color: white;

@@ -247,6 +247,7 @@ document.addEventListener('click', function(e) {
 
 // Camera functionality
 let cameraStream = null;
+let currentFacingMode = 'environment'; // 'environment' for rear, 'user' for front
 
 function openCamera() {
   // Close any existing camera stream
@@ -289,6 +290,18 @@ function openCamera() {
   captureBtn.style.borderRadius = '20px';
   captureBtn.style.cursor = 'pointer';
 
+  const switchBtn = document.createElement('button');
+  switchBtn.id = 'switchCameraButton';
+  switchBtn.textContent = '🔄 ALTER VIEW';
+  switchBtn.style.marginTop = '10px';
+  switchBtn.style.padding = '10px 20px';
+  switchBtn.style.backgroundColor = '#4b68e8';
+  switchBtn.style.color = 'white';
+  switchBtn.style.border = 'none';
+  switchBtn.style.borderRadius = '20px';
+  switchBtn.style.cursor = 'pointer';
+  switchBtn.onclick = switchCameraInModal;
+
   const closeBtn = document.createElement('button');
   closeBtn.id = 'closeCameraButton';
   closeBtn.textContent = '❌ Close';
@@ -302,11 +315,17 @@ function openCamera() {
 
   modal.appendChild(video);
   modal.appendChild(captureBtn);
+  modal.appendChild(switchBtn);
   modal.appendChild(closeBtn);
   document.body.appendChild(modal);
 
-  // Request camera access
-  navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+  // Request camera access with current facing mode
+  const constraints = { 
+    video: { facingMode: currentFacingMode },
+    audio: false 
+  };
+  
+  navigator.mediaDevices.getUserMedia(constraints)
     .then(stream => {
       cameraStream = stream;
       video.srcObject = stream;
@@ -353,6 +372,45 @@ function closeCameraModal(modal) {
     modal.parentNode.removeChild(modal);
   }
 }
+
+function switchCameraInModal() {
+  // Toggle between front and rear camera
+  currentFacingMode = currentFacingMode === 'environment' ? 'user' : 'environment';
+  
+  // Get the current modal and video
+  const cameraModal = document.getElementById('cameraModal');
+  const video = document.getElementById('cameraVideo');
+  
+  if (cameraModal && video) {
+    // Close current stream
+    if (cameraStream) {
+      cameraStream.getTracks().forEach(track => track.stop());
+      cameraStream = null;
+    }
+    
+    if (video.srcObject) {
+      video.srcObject = null;
+    }
+    
+    // Request new stream with updated facing mode
+    const constraints = { 
+      video: { facingMode: currentFacingMode },
+      audio: false 
+    };
+    
+    navigator.mediaDevices.getUserMedia(constraints)
+      .then(stream => {
+        cameraStream = stream;
+        video.srcObject = stream;
+      })
+      .catch(err => {
+        console.error('Kamerafehler:', err);
+        alert('Kamerazugriff wurde verweigert oder ist nicht verfügbar.');
+      });
+  }
+}
+
+
 
 function sendPhoto(imageDataUrl) {
   const messages = JSON.parse(localStorage.getItem(ARTHUR_CHAT_KEY) || '[]');
