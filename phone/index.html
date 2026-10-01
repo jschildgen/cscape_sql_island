@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OSGreSQL</title>
+    <link rel="stylesheet" href="./app.css" />
+  </head>
+  <body>
+    <div class="iphone">
+      <div class="statusbar">
+        <span>9:41</span>
+        <div class="icons">
+          <span class="signal"><span></span><span></span><span></span><span></span></span>
+          <span>B+</span>
+          <span class="battery"></span>
+        </div>
+      </div>
+
+      <div class="home-screen">
+        <div class="grid">
+          <div class="app">
+            <div class="app-icon" title="Chat" onclick="openTablegram()">
+              <div class="chat-glyph">
+                <div class="bubble"></div>
+              </div>
+            </div>
+            <span class="app-label">Tablegram</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tablegram App -->
+      <div class="tablegram-app" id="tablegramApp">
+        <div class="tablegram-header">
+          <span style="margin-left: 20px;">Tablegram</span>
+        </div>
+        
+        <div class="tablegram-search">
+          <input type="text" id="contactSearch" placeholder="Search Contacts..." />
+        </div>
+        
+        <div class="tablegram-chats">
+          <ul class="tablegram-chat-list" id="chatList">
+            <li class="tablegram-chat-item" onclick="openArthurChat()">
+              <div class="tablegram-avatar" style="background-image: url('arthur_head.png'); background-size: cover; background-position: center; background-color: transparent; color: transparent;"></div>
+              <div class="tablegram-chat-info">
+                <div class="tablegram-chat-name">Arthur</div>
+                <div class="tablegram-chat-preview">NULL</div>
+              </div>
+              <div class="tablegram-chat-time">15:21</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Arthur Chat -->
+      <div class="arthur-chat" id="arthurChat">
+        <div class="arthur-chat-header">
+          <button class="back-button" onclick="closeArthurChat()">←</button>
+          <span>Arthur</span>
+          <button class="hamburger-menu" onclick="toggleHamburgerMenu()">☰</button>
+          <div class="hamburger-dropdown" id="hamburgerMenu">
+            <div class="hamburger-item" onclick="emptyChat()">TRUNCATE Chat</div>
+          </div>
+        </div>
+        <div class="arthur-chat-messages" id="arthurMessages"></div>
+        <div class="arthur-chat-input">
+          <button class="camera-button" title="Kamera" onclick="openCamera()">📷</button>
+          <input type="text" id="messageInput" placeholder="INSERT Message..." />
+          <button class="send-button" onclick="sendMessage()">▶</button>
+        </div>
+      </div>
+
+      <div class="page-dots">
+        <span class="active"></span>
+      </div>
+
+      <div class="dock"></div>
+      <div class="home-indicator"></div>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
