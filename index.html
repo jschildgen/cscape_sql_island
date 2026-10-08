@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>CSCape</title>
+
+		<link rel="stylesheet" href="js/reveal.js/dist/reset.css">
+		<link rel="stylesheet" href="js/reveal.js/dist/reveal.css">
+		<link rel="stylesheet" href="js/reveal.js/dist/theme/black.css">
+
+		<link rel="stylesheet" href="js/story-styles/cscape-story.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="js/reveal.js/plugin/highlight/monokai.css">
+
+		<style>
+			.slide-background {
+				background-color: #000 !important;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section data-layout="black"></section>
+				<section
+				 	data-cscape-check="check_firstmessage"
+					data-layout="dialogue"
+					data-speaker="CHARly"
+					data-avatar="charly.png"
+					data-side="left"
+					data-generate-sound="true"
+					data-tts-text-from="dialogue">
+					<div class="cscape-dialogue">Hello, I'm CHARly. I saw your message to Arthur. Brave. But pointless. He won't answer. 
+He can read every message you send... he just can't reply. Don't ask why. It's complicated. 
+So keep writing to him! Send him your team name. Let him know who you are.
+Oh, and another thing: someone stuck something on the printer in this room. Maybe you find something next to the printer.</div>
+				</section>
+
+				<section
+				 	data-cscape-check="check_er"
+					data-layout="dialogue"
+					data-background="floppy.jpg"
+					data-speaker="Arthur"
+					data-avatar="arthur.png"
+					data-side="left"
+					data-generate-sound="true"
+					data-tts-text-from="dialogue">
+					<div class="cscape-dialogue">Hi TEAM_NAME! Good news first: I'm alive. I'm no longer on SQL Island — but on a backup on a floppy disk. And it's dark in here.
+You wonder why I'm tied up? I don't know. I woke up like this. That's also why I couldn't answer your chat messages
+First: your ER diagram is correct. With this ER diagram and this backup on a floppy disk, we can restore SQL Island and bring the people back.
+Connect to the database and create the table. The credentials are hidden behind the board.</div>
+				</section>
+
+				<section
+				 	data-cscape-check="check_connected"
+					data-layout="dialogue"
+					data-background="floppy.jpg"
+					data-speaker="Dirty Dieter"
+					data-avatar="dieter.png"
+					data-side="left"
+					data-generate-sound="true"
+					data-tts-text-from="dialogue">
+					<div class="cscape-dialogue">Yes, you see correctly. It's me, Dirty Dieter! You thought I was gone? No. 
+CHARly the elephant executed a ROLLBACK. Diane and I were never deleted — and that's why Arthur is tied up again. We're all here on the floppy disk. 
+That letter? The one that called you to SQL Island? I wrote it. 
+When you want the inhabitants back, then first use a CREATE TABLE command and rebuild the inhabitants table. You have your ER diagram.
+And TEAM_NAME: Don't forget the foreign key!</div>
+				</section>
+
+				<section
+				 	data-cscape-check="check_create_table"
+					data-layout="dialogue"
+					data-speaker="CHARly"
+					data-avatar="charly.png"
+					data-side="left"
+					data-generate-sound="true"
+					data-tts-text-from="dialogue">
+					<div class="cscape-dialogue">So... now you know about the ROLLBACK. That was me. I didn't know it would bring the Dirties back and tie up poor Arthur again. I'm sorry. 
+But hey — good news: I saw you created the inhabitants table! Well done!
+Not so good news: a foreign key from the chief column in the village table to the inhabitants table is still missing. 
+Use ALTER TABLE. How it works? Read the note under a chair.</div>
+				</section>
+
+				<section
+				 	data-cscape-check="check_foreign_key"
+					data-layout="dialogue"
+					data-background="floppy.jpg"
+					data-speaker="Dirty Dieter"
+					data-avatar="dieter.png"
+					data-side="left"
+					data-generate-sound="true"
+					data-tts-text-from="dialogue">
+					<div class="cscape-dialogue">Long time ago. I think it was last Thursday... no, wait — Thursday was the storm. It was last Wednesday. Short after the ROLLBACK.
+That night, someone created this backup and ran DELETE FROM inhabitants; And because of ON DELETE SET NULL, all the chief values went NULL. We'll deal with that later.
+First: the inhabitants must come back. There's a backup — in a suitcase.
+The code? It has something to do with the village IDs. </div>
+				</section>
+
+				<section
+				 	data-cscape-check="check_inhabitants"
+					data-layout="dialogue"
+					data-speaker="CHARly"
+					data-avatar="charly.png"
+					data-side="left"
+					data-generate-sound="true"
+					data-tts-text-from="dialogue">
+					<div class="cscape-dialogue">The inhabitants are back! But who deleted them? Not me. I don't know.
+There's still one thing left: the chiefs. All NULL, remember?
+Maybe there's something else in that suitcase.</div>
+				</section>
+
+				<section
+				 	data-cscape-check="check_chief"
+					data-layout="dialogue"
+					data-speaker="Dirty Diane"
+					data-avatar="diane.png"
+					data-side="left"
+					data-generate-sound="true"
+					data-tts-text-from="dialogue">
+					<div class="cscape-dialogue">So. TEAM_NAME. You found it all out. Then I'll say it myself: it was me. Dirty Diane. 
+I ran DELETE FROM inhabitants; But not because I'm evil. I did it to protect the people from the storm.
+One last query: For every village, how many inhabitants live there? 
+Then SQL Island is truly saved.</div>
+				</section>
+
+				<section
+				 	data-cscape-check="check_select_count"
+					data-layout="dialogue"
+					data-speaker="CHARly"
+					data-avatar="charly.png"
+					data-side="left"
+					data-generate-sound="true"
+					data-tts-text-from="dialogue">
+					<div class="cscape-dialogue">Yeah! You saved SQL Island!
+The people are back. The island lives. Thank you!
+Oh! I'll go take care of Arthur! Sit tight, pilot — help is coming!</div>
+				</section>
+			</div>
+		</div>
+
+		<script src="js/reveal.js/dist/reveal.js"></script>
+		<script src="js/reveal.js/plugin/notes/notes.js"></script>
+		<script src="js/reveal.js/plugin/markdown/markdown.js"></script>
+		<script src="js/reveal.js/plugin/highlight/highlight.js"></script>
+		<script src="js/revealjs-cscape.js"></script>
+		<script src="js/story-styles/cscape-story.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: false,
+				controls: false,
+				progress: false,
+				transition: 'none',
+				keyboard: {
+					27: function () { alert("Close with Ctrl+W"); },  // Esc 
+					83: null 							 // disable 'S' key (speaker mode)
+				},
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes, RevealCscape, CscapeStory ],
+
+				cscape_story: {
+					blockNavigationUntilReady: true,
+
+					defaultLayout: "dialogue",
+					defaultBackground: "sql_island_bg.jpg",
+					defaultTextMode: "type",
+					typeSpeed: 24,
+					soundVolume: 0.82,
+					audioHintText: "Click to enable voice output",
+
+					defaultVoice: "Google UK English Male",
+					defaultTtsLang: "en-UK",
+					defaultTtsRate: 1.0,
+					defaultTtsPitch: 1.0
+				}
+			});
+		</script>
+	</body>
+</html>
+

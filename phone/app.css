@@ -63,6 +63,7 @@ body {
   color: #fff;
   font-size: 15px;
   font-weight: 600;
+  z-index: 1000;
 }
 
 .statusbar .icons {
@@ -366,6 +367,13 @@ body {
   position: relative;
   overflow: visible;
   flex-shrink: 0;
+}
+
+.arthur-avatar-header {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  margin-right: 10px;
 }
 
 .tablegram-header .back-button,

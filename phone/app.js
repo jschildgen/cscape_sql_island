@@ -158,15 +158,15 @@ function loadArthurMessages() {
         spinner.style.animation = 'spin 1s linear infinite';
         
         const loadingText = document.createElement('div');
-        loadingText.textContent = 'Sending...';
+        loadingText.textContent = 'Validating ER diagram...';
         loadingText.style.fontSize = '12px';
         loadingText.style.color = '#888';
         
         loadingElement.appendChild(spinner);
         loadingElement.appendChild(loadingText);
         messageElement.appendChild(loadingElement);
-      } else {
-        // Show image with error message
+      } else if (msg.status === 'valid') {
+        // Show valid image
         const imgElement = document.createElement('img');
         imgElement.src = msg.content;
         imgElement.className = 'chat-image';
@@ -175,10 +175,31 @@ function loadArthurMessages() {
         imgElement.style.borderRadius = '8px';
         messageElement.appendChild(imgElement);
         
-        // Add error message under the photo
+        // Add success message
+        const successElement = document.createElement('div');
+        successElement.className = 'chat-success';
+        successElement.textContent = '✓ Valid ER diagram accepted';
+        successElement.style.color = '#34c759';
+        successElement.style.fontSize = '12px';
+        successElement.style.marginTop = '5px';
+        successElement.style.fontFamily = 'monospace';
+        messageElement.appendChild(successElement);
+      } else if (msg.status === 'error') {
+        // Show image with error message
+        const imgElement = document.createElement('img');
+        imgElement.src = msg.content;
+        imgElement.className = 'chat-image';
+        imgElement.style.maxWidth = '200px';
+        imgElement.style.maxHeight = '200px';
+        imgElement.style.borderRadius = '8px';
+        imgElement.style.opacity = '0.6';
+        messageElement.appendChild(imgElement);
+        
+        // Add error message with specific reason
+        const errorReason = msg.reason || 'INVALID';
         const errorElement = document.createElement('div');
         errorElement.className = 'chat-error';
-        errorElement.textContent = 'ERROR 406 Not Acceptable: This contact only accepts photos of correct ER diagrams (RELATIONSHIP_MISSING).';
+        errorElement.textContent = `ERROR 406 Not Acceptable: This contact only accepts photos of correct ER diagrams (${errorReason}).`;
         errorElement.style.color = '#ff3b30';
         errorElement.style.fontSize = '12px';
         errorElement.style.marginTop = '5px';
@@ -195,17 +216,31 @@ function loadArthurMessages() {
   messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
 
-function sendMessage() {
+async function sendMessage() {
   const input = document.getElementById('messageInput');
   const message = input.value.trim();
   
   if (message) {
+    // Save to localStorage for immediate UI update
     const messages = JSON.parse(localStorage.getItem(ARTHUR_CHAT_KEY) || '[]');
     messages.push({ type: 'text', content: message });
     localStorage.setItem(ARTHUR_CHAT_KEY, JSON.stringify(messages));
     
     input.value = '';
     loadArthurMessages();
+    
+    // Also send to chat.php to append to chat.txt
+    try {
+      await fetch('chat.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: 'message=' + encodeURIComponent(message)
+      });
+    } catch (error) {
+      console.error('Error saving to chat.txt:', error);
+    }
   }
 }
 
@@ -334,8 +369,8 @@ function openCamera() {
       closeBtn.onclick = () => closeCameraModal(modal);
     })
     .catch(err => {
-      console.error('Kamerafehler:', err);
-      alert('Kamerazugriff wurde verweigert oder ist nicht verfügbar.');
+      console.error('Camera Error:', err);
+      alert('Camera Access not allowed or no camera available.');
       document.body.removeChild(modal);
     });
 }
@@ -348,6 +383,7 @@ function capturePhoto(video, modal) {
   const ctx = canvas.getContext('2d');
   ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
   
+  // Use JPEG format
   const imageDataUrl = canvas.toDataURL('image/jpeg');
   
   // Save photo to chat
@@ -404,15 +440,51 @@ function switchCameraInModal() {
         video.srcObject = stream;
       })
       .catch(err => {
-        console.error('Kamerafehler:', err);
-        alert('Kamerazugriff wurde verweigert oder ist nicht verfügbar.');
+        console.error('Camera Error:', err);
+        alert('Camera Access not allowed or no camera available.');
       });
   }
 }
 
 
 
-function sendPhoto(imageDataUrl) {
+async function validateERDiagram(imageDataUrl) {
+  // Extract base64 data from data URL
+  const base64Data = imageDataUrl.split(',')[1];
+  
+  const startTime = performance.now();
+  
+  try {
+    const response = await fetch('llm.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({image_data: base64Data})
+    });
+    
+    const result = await response.json();
+    
+    const endTime = performance.now();
+    const durationSeconds = (endTime - startTime) / 1000;
+    console.log('LLM request duration:', durationSeconds.toFixed(3), 'seconds');
+    
+    // Output debug field to console if present
+    if (result.debug) {
+      console.log('LLM Debug:', result.debug);
+    }
+    if (result.raw_response) {
+      console.log('LLM Raw Response:', result.raw_response);
+    }
+    
+    return result;
+  } catch (error) {
+    console.error('Validation error:', error);
+    return { valid: false, reason: 'CONNECTION_ERROR' };
+  }
+}
+
+async function sendPhoto(imageDataUrl) {
   const messages = JSON.parse(localStorage.getItem(ARTHUR_CHAT_KEY) || '[]');
   
   // Add loading message immediately
@@ -426,21 +498,35 @@ function sendPhoto(imageDataUrl) {
   localStorage.setItem(ARTHUR_CHAT_KEY, JSON.stringify(messages));
   loadArthurMessages();
   
-  // After 5 seconds, replace loading with error
-  setTimeout(() => {
-    const updatedMessages = JSON.parse(localStorage.getItem(ARTHUR_CHAT_KEY) || '[]');
-    const index = updatedMessages.findIndex(m => m.id === loadingId);
-    if (index !== -1) {
+  // Validate the image with LLM
+  const validationResult = await validateERDiagram(imageDataUrl);
+  
+  // Update message with validation result
+  const updatedMessages = JSON.parse(localStorage.getItem(ARTHUR_CHAT_KEY) || '[]');
+  const index = updatedMessages.findIndex(m => m.id === loadingId);
+  
+  if (index !== -1) {
+    if (validationResult.valid) {
+      // Valid ER diagram - show image normally
+      updatedMessages[index] = { 
+        type: 'image', 
+        content: imageDataUrl,
+        status: 'valid',
+        id: loadingId
+      };
+    } else {
+      // Invalid ER diagram - show error with reason
       updatedMessages[index] = { 
         type: 'image', 
         content: imageDataUrl,
         status: 'error',
+        reason: validationResult.reason || 'INVALID',
         id: loadingId
       };
-      localStorage.setItem(ARTHUR_CHAT_KEY, JSON.stringify(updatedMessages));
-      loadArthurMessages();
     }
-  }, 5000);
+    localStorage.setItem(ARTHUR_CHAT_KEY, JSON.stringify(updatedMessages));
+    loadArthurMessages();
+  }
 }
 
 // Handle browser back/forward navigation
