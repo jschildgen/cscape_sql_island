@@ -48,7 +48,7 @@ Oh, and another thing: someone stuck something on the printer in this room. Mayb
 					data-side="left"
 					data-generate-sound="true"
 					data-tts-text-from="dialogue">
-					<div class="cscape-dialogue">Hi TEAM_NAME! Good news first: I'm alive. I'm no longer on SQL Island — but on a backup on a floppy disk. And it's dark in here.
+					<div class="cscape-dialogue">Hi <span data-cscape-get="TEAM_NAME"></span>! Good news first: I'm alive. I'm no longer on SQL Island — but on a backup on a floppy disk. And it's dark in here.
 You wonder why I'm tied up? I don't know. I woke up like this. That's also why I couldn't answer your chat messages
 First: your ER diagram is correct. With this ER diagram and this backup on a floppy disk, we can restore SQL Island and bring the people back.
 Connect to the database and create the table. The credentials are hidden behind the board.</div>
@@ -67,7 +67,7 @@ Connect to the database and create the table. The credentials are hidden behind 
 CHARly the elephant executed a ROLLBACK. Diane and I were never deleted — and that's why Arthur is tied up again. We're all here on the floppy disk. 
 That letter? The one that called you to SQL Island? I wrote it. 
 When you want the inhabitants back, then first use a CREATE TABLE command and rebuild the inhabitants table. You have your ER diagram.
-And TEAM_NAME: Don't forget the foreign key!</div>
+And <span data-cscape-get="TEAM_NAME"></span>: Don't forget the foreign key!</div>
 				</section>
 
 				<section
@@ -120,7 +120,7 @@ Maybe there's something else in that suitcase.</div>
 					data-side="left"
 					data-generate-sound="true"
 					data-tts-text-from="dialogue">
-					<div class="cscape-dialogue">So. TEAM_NAME. You found it all out. Then I'll say it myself: it was me. Dirty Diane. 
+					<div class="cscape-dialogue">So. <span data-cscape-get="TEAM_NAME"></span>. You found it all out. Then I'll say it myself: it was me. Dirty Diane. 
 I ran DELETE FROM inhabitants; But not because I'm evil. I did it to protect the people from the storm.
 One last query: For every village, how many inhabitants live there? 
 Then SQL Island is truly saved.</div>

@@ -44,7 +44,7 @@ class Game:
                         team_name = stripped_line
                         break
                 if team_name:
-                    self.game_data_store.set("TEAM_NAME", team_name)
+                    self.game_data_store.store("TEAM_NAME", team_name)
                 er_solved = "#ER_SOLVED" in response.text
                 return er_solved
         except Exception as e:
