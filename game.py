@@ -92,7 +92,7 @@ def last_query(username, contains='None'):
 
   for item in result:
      q = item[0].decode("utf-8")
-     if (contains.lower() in q.lower()):
+     if q.lower().startswith("select ") and contains.lower() in q.lower():
        return q
 
 class Game:
@@ -198,7 +198,7 @@ class Game:
       if not q:
         return False
       print("Checking query: "+q)
-      result = query(q)
+      result = query(q, True)
       r = {}
       for item in result:
         r[item[0]] = item[1]
@@ -212,7 +212,7 @@ class Game:
       return False
 
 
-def query (query):
+def query (query, readonly=False):
   host = config.get('cscape_sql_island', 'db_host', fallback='localhost')
   port = config.get('cscape_sql_island', 'db_port', fallback='3306')
   dbname = config.get('cscape_sql_island', 'db_name', fallback='cscape_sql_island')
@@ -225,6 +225,10 @@ def query (query):
     return False
 
   cursor = connection.cursor()
+
+	if readonly:
+    cursor.execute("START TRANSACTION READ ONLY")
+
   try:
     cursor.execute(query)
   except:
