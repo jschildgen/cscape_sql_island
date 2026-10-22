@@ -1,0 +1,83 @@
+-- MySQL dump 10.13  Distrib 8.0.46, for Linux (x86_64)
+--
+-- Host: localhost    Database: cscape_sql_island
+-- ------------------------------------------------------
+-- Server version	8.0.46-0ubuntu0.24.04.4
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!50503 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `inhabitants`
+--
+
+DROP TABLE IF EXISTS `inhabitants`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `inhabitants` (
+  `personid` int NOT NULL,
+  `name` text,
+  `job` text,
+  `gender` text,
+  `gold` int DEFAULT NULL,
+  `home` int DEFAULT NULL,
+  PRIMARY KEY (`personid`),
+  KEY `home` (`home`),
+  CONSTRAINT `inhabitants_ibfk_1` FOREIGN KEY (`home`) REFERENCES `villages` (`villageid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `inhabitants`
+--
+
+LOCK TABLES `inhabitants` WRITE;
+/*!40000 ALTER TABLE `inhabitants` DISABLE KEYS */;
+INSERT INTO `inhabitants` (`personid`, `name`, `job`, `gender`, `gold`, `home`) VALUES (1,'Paul Bakerman','baker','m',470,1),(2,'Ernest Perry','weaponsmith','m',280,3),(3,'Rita Ox','baker','f',350,1),(4,'Carl Ox','merchant','m',250,1),(5,'Dirty Dieter','smith','m',650,3),(6,'Gerry Slaughterer','butcher','m',4850,2),(7,'Peter Slaughterer','butcher','m',3250,3),(8,'Arthur Tailor','pilot','m',490,2),(9,'Tiffany Drummer','baker','f',550,1),(10,'Peter Drummer','smith','m',600,1),(11,'Dirty Diane','farmer','f',10,3),(12,'Otto Alexander','dealer','m',680,2),(13,'Fred Dix','author','m',420,3),(14,'Enrico Carpenter','weaponsmith','m',510,3),(15,'Helen Grasshead','dealer','f',680,2),(16,'Ivy Hatter','dealer','f',770,1),(17,'Edward Grasshead','butcher','m',990,3),(18,'Ryan Horse','blacksmith','m',390,3),(19,'Ann Meaty','butcher','f',2280,2);
+/*!40000 ALTER TABLE `inhabitants` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `villages`
+--
+
+DROP TABLE IF EXISTS `villages`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `villages` (
+  `villageid` int NOT NULL,
+  `name` text,
+  `chief` int DEFAULT NULL,
+  PRIMARY KEY (`villageid`),
+  KEY `chief` (`chief`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `villages`
+--
+
+LOCK TABLES `villages` WRITE;
+/*!40000 ALTER TABLE `villages` DISABLE KEYS */;
+INSERT INTO `villages` (`villageid`, `name`, `chief`) VALUES (1,'Monkeycity',1),(2,'Cucumbertown',6),(3,'Onionville',13);
+/*!40000 ALTER TABLE `villages` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2026-10-22 12:30:38

@@ -1,0 +1,12 @@
+DROP TABLE IF EXISTS `inhabitants`;
+CREATE TABLE `inhabitants` (
+  `personid` int NOT NULL,
+  `name` text,
+  `job` text,
+  `gender` text,
+  `gold` int DEFAULT NULL,
+  `home` int DEFAULT NULL,
+  PRIMARY KEY (`personid`),
+  KEY `home` (`home`),
+  CONSTRAINT `inhabitants_ibfk_1` FOREIGN KEY (`home`) REFERENCES `villages` (`villageid`)
+);
