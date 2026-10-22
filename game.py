@@ -186,7 +186,7 @@ class Game:
         return check_tables(want)
 
     def check_inhabitants(self):
-       return check_table_contents("assets/inhabitants.csv", "SELECT personid,name,job,gender,gold,home FROM inhabitants ORDER BY personid")
+       return check_table_contents("cscape_sql_island/assets/inhabitants.csv", "SELECT personid,name,job,gender,gold,home FROM inhabitants ORDER BY personid")
 
     def check_chief(self):
       result = query("select count(*) from villages where chief = (select personid from inhabitants where name = 'Helen Grasshead');");
