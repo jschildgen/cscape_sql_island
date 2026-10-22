@@ -1,4 +1,5 @@
 import requests
+import sys
 import time
 import configparser
 import csv
@@ -64,6 +65,35 @@ def check_tables (want):
 
   return True
 
+def check_table_contents (csvfile, sqlquery):
+    try:
+      contents_db = query(sqlquery)
+      contents_file = open(csvfile)
+      contents_csv = csv.reader(contents_file, delimiter=',', quotechar='\'')
+      for row in contents_db:
+        csvrow = tuple(next(contents_csv,[]))
+        dbrow = tuple(map(str,row))
+        if csvrow != dbrow:
+          print("Mismatch: db:"+str(dbrow)+", expected: "+str(csvrow))
+          return False
+    except Exception as e:
+      raise e
+      print(f'Error checking contents: {e}')
+      return False
+    csvrow = tuple(next(contents_csv,[]))
+    if csvrow != ():
+      print("Too few rows in db")
+      return False
+
+    return True
+
+def last_query(username, contains='None'):
+  result = query(f"SELECT argument FROM mysql.general_log WHERE command_type='Query' AND user_host LIKE '{username}[%' AND event_time > date_sub(now(), interval 10 second) order by event_time desc");
+
+  for item in result:
+     q = item[0].decode("utf-8")
+     if (contains.lower() in q.lower()):
+       return q
 
 class Game:
     title = "SQL Island Escape Room"
@@ -156,13 +186,30 @@ class Game:
         return check_tables(want)
 
     def check_inhabitants(self):
-        return False
+       return check_table_contents("assets/inhabitants.csv", "SELECT personid,name,job,gender,gold,home FROM inhabitants ORDER BY personid")
 
     def check_chief(self):
-        return False
+      result = query("select count(*) from villages where chief = (select personid from inhabitants where name = 'Helen Grasshead');");
+      count = result[0][0]
+      return count == 3
 
     def check_select_count(self):
+      q = last_query("cscape_sql_island", "group")
+      if not q:
         return False
+      print("Checking query: "+q)
+      result = query(q)
+      r = {}
+      for item in result:
+        r[item[0]] = item[1]
+
+      if "Monkeycity" in r:
+        if r["Monkeycity"] == 6 and r["Cucumbertown"] == 5 and r["Onionville"] == 8:
+           return True
+      elif 1 in r and 2 in r and 3 in r:
+        if r[1] == 6 and r[2] == 5 and r[3] == 8:
+           return True
+      return False
 
 
 def query (query):
@@ -188,43 +235,4 @@ def query (query):
     result.append(entry)
 
   return result
-
-if __name__ == "__main__":
-  config.read("../config.ini")
-  found = False
-  want = {
-    "villages": {
-      "villageid": { "type": "int", "key": "PRI" },
-      "name": { "type": "text" },
-      "chief": { "type": "int", "fk": { "table":"inhabitants", "column":"personid" } }
-    },
-    "inhabitants": {
-      "personid": { "type": "int", "key": "PRI" },
-      "name": { "type": "text" },
-      "gender": { "type": "text" },
-      "job": { "type": "text" },
-      "gold": { "type": "int" },
-      "home": { "type": "int", "fk": { "table":"villages", "column":"villageid" } }
-    }
-  }
-  while not check_tables(want):
-    time.sleep(1)
-  print("Create table found!")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
