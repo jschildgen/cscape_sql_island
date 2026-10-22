@@ -17,34 +17,42 @@ def check_tables (want):
     schema[table][column] = { "type": column_type, "key": key }
 
   result = query("SELECT TABLE_NAME,COLUMN_NAME,CONSTRAINT_NAME,REFERENCED_TABLE_NAME,REFERENCED_COLUMN_NAME FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE REFERENCED_TABLE_SCHEMA=(SELECT DATABASE())")
-  print(result)
   for entry in result:
     (table,column,cname,ref_table,ref_column) = entry
     schema[table][column]["fk"] = {"table":ref_table, "column":ref_column }
 
   for table in want:
+    # Check if table exists
+    if not table in schema:
+      print("Table missing: "+table)
+      return False   # Table does not exist
     for column in want[table]:
       data = want[table][column]
-      if not table in schema:
-        print("Table missing: "+table)
-        return False   # Table does not exist
+
+      # Check if column exists
       if not column in schema[table]:
         print("Column missing in table "+table+": "+column)
         return False   # Column does not exist
+
+      # Checking primary key attributes
       key = False if "key" not in schema[table][column] else schema[table][column]["key"]
       if (not "key" in data and key or "key" in data and data["key"] != key) and key != "MUL": 
         print("Key error "+table+"/"+column+": "+(key or "(None)")+" != "+("(None)" if not "key" in data else data["key"]))
         return False   # Key wrong
-      ctype = schema[table][column]["type"]
-      if data["type"] == "text" and "text" not in ctype and "varchar" not in ctype:
-        print("Text type error "+table+"/"+column+": "+ctype+" != "+data["type"])
+
+      # Checking data types
+      stype = schema[table][column]["type"]
+      wtype = data["type"] if type in data else False
+      if wtype and wtype == "text" and "text" not in stype and "varchar" not in stype:
+        print("Text type error "+table+"/"+column+": "+stype+" != "+wtype)
         return False   # Type wrong
-      if data["type"] == "int" and "int" not in ctype:
-        print("Int type error "+table+"/"+column+": "+ctype+" != "+data["type"])
+      if wtype and wtype == "int" and "int" not in stype:
+        print("Int type error "+table+"/"+column+": "+stype+" != "+wtype)
         return False   # Type wrong
+
+      # Checking foreign keys
       fk = False if not "fk" in schema[table][column] else schema[table][column]["fk"]
       if "fk" in data and not fk:
-        print(schema)
         print("FK missing for "+table+"/"+column)
         return False   # Foreign key wrong
       if "fk" in data and fk and (fk["table"] != data["fk"]["table"] or fk["column"] != data["fk"]["column"]):
