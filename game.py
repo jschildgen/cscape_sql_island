@@ -226,7 +226,7 @@ def query (query, readonly=False):
 
   cursor = connection.cursor()
 
-	if readonly:
+  if readonly:
     cursor.execute("START TRANSACTION READ ONLY")
 
   try:

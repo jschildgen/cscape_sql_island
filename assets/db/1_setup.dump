@@ -39,7 +39,7 @@ CREATE TABLE `villages` (
 
 LOCK TABLES `villages` WRITE;
 /*!40000 ALTER TABLE `villages` DISABLE KEYS */;
-INSERT INTO `villages` (`villageid`, `name`, `chief`) VALUES (1,'Monkeycity',1),(2,'Cucumbertown',6),(3,'Onionville',13);
+INSERT INTO `villages` (`villageid`, `name`, `chief`) VALUES (1,'Monkeycity',NULL),(2,'Cucumbertown',NULL),(3,'Onionville',NULL);
 /*!40000 ALTER TABLE `villages` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
