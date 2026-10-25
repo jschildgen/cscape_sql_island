@@ -32,6 +32,8 @@
 					data-avatar="charly.png"
 					data-side="left"
 					data-generate-sound="true"
+					data-tts-voice="Google UK English Female"
+					data-tts-pitch="0.8"
 					data-tts-text-from="dialogue">
 					<div class="cscape-dialogue">Hello, I'm CHARly. I saw your message to Arthur. Brave. But pointless. He won't answer. 
 He can read every message you send... he just can't reply. Don't ask why. It's complicated. 
@@ -47,6 +49,7 @@ Oh, and another thing: someone stuck something on the printer in this room. Mayb
 					data-avatar="arthur.png"
 					data-side="left"
 					data-generate-sound="true"
+					data-tts-pitch="1.1"
 					data-tts-text-from="dialogue">
 					<div class="cscape-dialogue">Hi <span data-cscape-get="TEAM_NAME"></span>! Good news first: I'm alive. I'm no longer on SQL Island — but on a backup on a floppy disk. And it's dark in here.
 You wonder why I'm tied up? I don't know. I woke up like this. That's also why I couldn't answer your chat messages
@@ -62,6 +65,7 @@ Connect to the database and create the tables. The credentials are hidden behind
 					data-avatar="dieter.png"
 					data-side="left"
 					data-generate-sound="true"
+					data-tts-pitch="0.4"
 					data-tts-text-from="dialogue">
 					<div class="cscape-dialogue">Yes, you see correctly. It's me, Dirty Dieter! You thought I was gone? No. 
 CHARly the elephant executed a ROLLBACK. Diane and I were never deleted — and that's why Arthur is tied up again. We're all here on the floppy disk. 
@@ -77,6 +81,8 @@ And <span data-cscape-get="TEAM_NAME"></span>: Don't forget the foreign key!</di
 					data-avatar="charly.png"
 					data-side="left"
 					data-generate-sound="true"
+					data-tts-voice="Google UK English Female"
+					data-tts-pitch="0.8"
 					data-tts-text-from="dialogue">
 					<div class="cscape-dialogue">So... now you know about the ROLLBACK. That was me. I didn't know it would bring the Dirties back and tie up poor Arthur again. I'm sorry. 
 But hey — good news: I saw you created the inhabitants table! Well done!
@@ -92,6 +98,7 @@ Use ALTER TABLE. How it works? Read the note under a chair.</div>
 					data-avatar="dieter.png"
 					data-side="left"
 					data-generate-sound="true"
+					data-tts-pitch="0.4"
 					data-tts-text-from="dialogue">
 					<div class="cscape-dialogue">Long time ago. I think it was last Thursday... no, wait — Thursday was the storm. It was last Wednesday. Short after the ROLLBACK.
 That night, someone created this backup and ran DELETE FROM inhabitants; And because of ON DELETE SET NULL, all the chief values went NULL. We'll deal with that later.
@@ -106,6 +113,8 @@ The code? It has something to do with the village IDs. </div>
 					data-avatar="charly.png"
 					data-side="left"
 					data-generate-sound="true"
+					data-tts-voice="Google UK English Female"
+					data-tts-pitch="0.8"
 					data-tts-text-from="dialogue">
 					<div class="cscape-dialogue">The inhabitants are back! But who deleted them? Not me. I don't know.
 There's still one thing left: the chiefs. All NULL, remember?
@@ -118,25 +127,19 @@ Maybe there's something else in that suitcase.</div>
 					data-speaker="Dirty Diane"
 					data-avatar="diane.png"
 					data-side="left"
+					data-tts-voice="Google US English"
 					data-generate-sound="true"
 					data-tts-text-from="dialogue">
-					<div class="cscape-dialogue">So. <span data-cscape-get="TEAM_NAME"></span>. You found it all out. Then I'll say it myself: it was me. Dirty Diane. 
-I ran DELETE FROM inhabitants; But not because I'm evil. I did it to protect the people from the storm.
+					<div class="cscape-dialogue">So. <span data-cscape-get="TEAM_NAME"></span>. You found it all out. Then I'll say it myself: it was me. Dirty Diane. I ran DELETE FROM inhabitants; but only to hide the people from the storm, not to harm them. They say you were able to restore what I deleted, but I won't believe it until I see it.
 One last query: For every village, how many inhabitants live there? 
 Then SQL Island is truly saved.</div>
 				</section>
 
 				<section
-				 	data-cscape-check="check_select_count"
-					data-layout="dialogue"
-					data-speaker="CHARly"
-					data-avatar="charly.png"
-					data-side="left"
-					data-generate-sound="true"
-					data-tts-text-from="dialogue">
-					<div class="cscape-dialogue">Yeah! You saved SQL Island!
-The people are back. The island lives. Thank you!
-Oh! I'll go take care of Arthur! Sit tight, pilot — help is coming!</div>
+					data-cscape-check="check_select_count"
+					data-background-video="sqlisland_outro.mp4"
+					data-background-size="contain"
+					data-autoplay
 				</section>
 			</div>
 		</div>
