@@ -6,6 +6,7 @@ SQL Island is an educational escape room game for the CSCape framework that teac
 
 ## Setup
 
+* Install required Python packages: `pip install mysql-connector-python`
 * Deploy phone folder to web server
 * Create database and user
 * Set permissions 777 on phone/chat.txt
